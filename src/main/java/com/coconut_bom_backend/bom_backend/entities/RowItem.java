@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "row_item")
-public class RawItem {
+public class RowItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +30,6 @@ public class RawItem {
     @Column(name = "is_disabled",columnDefinition = "BOOL")
     private boolean isDisabled;
 
+    @OneToMany(mappedBy = "rowItem")
+    private List<AddedTo> addedToList;
 }

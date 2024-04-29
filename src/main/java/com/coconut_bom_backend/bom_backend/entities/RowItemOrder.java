@@ -24,4 +24,6 @@ public class RowItemOrder {
     @Column(name = "total_price", scale = 2, nullable = false)
     private double totalPrice;
 
+    @OneToMany(mappedBy = "rowItemOrder")
+    private List<AddedTo> addedToList;
 }
