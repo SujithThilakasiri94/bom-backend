@@ -16,4 +16,12 @@ public class AddedTo {
     @Column(name = "unit_price",scale = 2,nullable = false)
     private double unit_price;
 
+    @ManyToOne
+    @JoinColumn(name = "raw_item_id_fk")
+    private RawItem rowItem;
+
+    @ManyToOne
+    @JoinColumn(name = "raw_item_order_id_fk")
+    private RowItemOrder rowItemOrder;
+
 }

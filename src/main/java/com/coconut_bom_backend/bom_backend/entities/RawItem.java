@@ -30,4 +30,6 @@ public class RawItem {
     @Column(name = "is_disabled",columnDefinition = "BOOL")
     private boolean isDisabled;
 
+    @OneToMany(mappedBy = "rowItem")
+    private List<AddedTo> addedToList;
 }
