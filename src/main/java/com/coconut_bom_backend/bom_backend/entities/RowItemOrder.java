@@ -1,6 +1,10 @@
 package com.coconut_bom_backend.bom_backend.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,6 +12,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "row_item_order")
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 public class RowItemOrder {
 
     @Id

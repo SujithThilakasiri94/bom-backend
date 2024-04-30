@@ -32,16 +32,17 @@ public class RowItemServiceImpl implements RowItemService {
 
     } else {
             try {
+                //
                 RowItem newRowItem = rowItemRepo.save(mapper.map(dto, RowItem.class));
                 response.setCode(200);
                 response.setMessage("Successfully saved row item");
                 response.setData(newRowItem);
+                response.setSuccess(true);
             }
             catch (Exception e){
                 response.setCode(500);
                 response.setMessage(e.getMessage());
                 response.setData(null);
-
             }
         }
         return response;
@@ -61,6 +62,7 @@ public class RowItemServiceImpl implements RowItemService {
 
                     response.setCode(200);
                     response.setMessage("Row item successfully deleted");
+                    response.setSuccess(true);
                 }
                 catch (Exception e){
                     response.setCode(500);
@@ -81,5 +83,4 @@ public class RowItemServiceImpl implements RowItemService {
         }
         return response;
     }
-
 }
