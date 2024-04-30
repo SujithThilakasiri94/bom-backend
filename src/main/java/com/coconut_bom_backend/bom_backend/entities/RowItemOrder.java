@@ -5,17 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Entity
+
 @Table(name = "row_item_order")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
+@Entity
+@Component
 public class RowItemOrder {
 
     @Id

@@ -1,10 +1,13 @@
 package com.coconut_bom_backend.bom_backend.services.impls;
 
+import com.coconut_bom_backend.bom_backend.dtos.dbModelDtos.AddedToModelDto;
 import com.coconut_bom_backend.bom_backend.dtos.requestDtos.RowItemOrderRequestDto;
 import com.coconut_bom_backend.bom_backend.entities.AddedTo;
+import com.coconut_bom_backend.bom_backend.entities.RowItem;
 import com.coconut_bom_backend.bom_backend.entities.RowItemOrder;
 import com.coconut_bom_backend.bom_backend.repos.AddedToRepo;
 import com.coconut_bom_backend.bom_backend.repos.RawItemOrderRepo;
+import com.coconut_bom_backend.bom_backend.repos.RowItemRepo;
 import com.coconut_bom_backend.bom_backend.services.RowItemOderService;
 import com.coconut_bom_backend.bom_backend.util.StandardResponse;
 import jakarta.transaction.Transactional;
@@ -13,48 +16,75 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
+
 public class RowItemOderServiceImpl implements RowItemOderService {
 
-    private final ModelMapper modelMapper;
     private  final AddedToRepo addedToRepo;
     private final RawItemOrderRepo rawItemOrderRepo;
+    private final RowItemRepo rowItemRepo;
 
-    public RowItemOderServiceImpl(ModelMapper modelMapper, AddedToRepo addedToRepo, RawItemOrderRepo rawItemOrderRepo) {
-        this.modelMapper = modelMapper;
+    public RowItemOderServiceImpl(ModelMapper modelMapper,
+                                  AddedToRepo addedToRepo,
+                                  RawItemOrderRepo rawItemOrderRepo,
+                                  AddedToModelDto addedToModelDto,
+                                  RowItemOrder rowItemOrder,
+                                  AddedTo addedTo,
+                                  RowItemRepo rowItemRepo) {
+
         this.addedToRepo = addedToRepo;
         this.rawItemOrderRepo = rawItemOrderRepo;
+        this.rowItemRepo = rowItemRepo;
     }
 
     @Override
     @Transactional
-    public StandardResponse SaveRowItemOrder(ArrayList<RowItemOrderRequestDto> dtoList) {
+    public StandardResponse SaveRowItemOrder(List<RowItemOrderRequestDto> dtoList) {
 
         StandardResponse response = new StandardResponse();
-        Double totalCost = 0.0;
+        double totalCost = 0.0;
 
         try {
-            for (RowItemOrderRequestDto dto : dtoList) {
-                addedToRepo.save(modelMapper.map(dto, AddedTo.class));
-                totalCost = totalCost + dto.getQty()*dto.getUnitPrice();
-                System.out.println(totalCost);
+
+            for (RowItemOrderRequestDto i : dtoList) {
+                totalCost = totalCost + i.getUnitPrice()*i.getQuantity(); ;
             }
+
+            // Create and save RowItemOrder
             RowItemOrder rowItemOrder = new RowItemOrder();
             rowItemOrder.setTime(LocalTime.now());
-            rowItemOrder.setDate( LocalDate.now());
+            rowItemOrder.setDate(LocalDate.now());
             rowItemOrder.setTotalPrice(totalCost);
+            RowItemOrder itemOrder = rawItemOrderRepo.save(rowItemOrder);
 
-            System.out.println(rowItemOrder);
+            int lastId = rawItemOrderRepo.findLastIId();
 
-            rawItemOrderRepo.save(rowItemOrder);
+            for (RowItemOrderRequestDto dto : dtoList) {
+
+               RowItem x = rowItemRepo.findById(dto.getRowItemId()).get();
+
+               AddedTo addedTo = new AddedTo();
+
+                addedTo.setRowItemOrder(itemOrder);//oder id
+                addedTo.setRowItem(x);
+                addedTo.setQty(dto.getQuantity());
+                addedTo.setUnitPrice(dto.getUnitPrice());
+                addedToRepo.save(addedTo);
+
+            }
+
+            response.setCode(200);
+            response.setMessage("Successfully added the order");
+            response.setSuccess(true);
+            response.setData(rowItemOrder);
         }
-
         catch (Exception e){
+            System.out.println("Running exception");
             response.setCode(500);
             response.setMessage(e.getMessage());
-            response.setData(null);
+            response.setSuccess(false);
         }
         return response;
     }
