@@ -5,4 +5,6 @@ import com.coconut_bom_backend.bom_backend.util.StandardResponse;
 
 public interface RowItemService {
     StandardResponse saveRowItem(RowItemRequestDto dto);
+
+    StandardResponse removeRowItem(String id);
 }

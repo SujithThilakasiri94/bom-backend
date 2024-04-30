@@ -47,4 +47,39 @@ public class RowItemServiceImpl implements RowItemService {
         return response;
     }
 
+    @Override
+    public StandardResponse removeRowItem(String id) {
+        StandardResponse response = new StandardResponse();
+
+        try {
+            RowItem rowItem = rowItemRepo.findById(Integer.parseInt(id)).get();
+
+            if (!rowItem.isDisabled()){
+                try {
+                    rowItem.setDisabled(true);
+                    rowItemRepo.save(rowItem);
+
+                    response.setCode(200);
+                    response.setMessage("Row item successfully deleted");
+                }
+                catch (Exception e){
+                    response.setCode(500);
+                    response.setMessage(e.getMessage());
+                    response.setData(null);
+                }
+            }
+            else {
+                response.setCode(404);
+                response.setMessage("Row item already deleted");
+                response.setData(null);
+            }
+        }
+        catch (Exception e){
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+            response.setData(null);
+        }
+        return response;
+    }
+
 }
