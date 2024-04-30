@@ -36,6 +36,7 @@ public class RowItemServiceImpl implements RowItemService {
                 response.setCode(200);
                 response.setMessage("Successfully saved row item");
                 response.setData(newRowItem);
+                response.setSuccess(true);
             }
             catch (Exception e){
                 response.setCode(500);
@@ -61,6 +62,7 @@ public class RowItemServiceImpl implements RowItemService {
 
                     response.setCode(200);
                     response.setMessage("Row item successfully deleted");
+                    response.setSuccess(true);
                 }
                 catch (Exception e){
                     response.setCode(500);
