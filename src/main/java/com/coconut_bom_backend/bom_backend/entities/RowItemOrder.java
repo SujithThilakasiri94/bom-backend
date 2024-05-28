@@ -1,5 +1,6 @@
 package com.coconut_bom_backend.bom_backend.entities;
 
+import com.coconut_bom_backend.bom_backend.entities.process1.ProcessOneItems;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,4 +38,8 @@ public class RowItemOrder {
 
     @OneToMany(mappedBy = "rowItemOrder")
     private List<AddedTo> addedToList;
+
+    @OneToMany(mappedBy = "rowItemOrder")
+    private List<ProcessOneItems> processOneItemsList;
+
 }

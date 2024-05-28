@@ -76,7 +76,7 @@ public class RowItemOderServiceImpl implements RowItemOderService {
             }
 
             response.setCode(200);
-            response.setMessage("Successfully added the order");
+            response.setMessage("Successfully placed the order");
             response.setSuccess(true);
             response.setData(rowItemOrder);
         }
